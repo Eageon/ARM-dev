@@ -1,27 +1,39 @@
 #include "common.h"
 #define OUTPUT_BUF_SIZE  4096
 
+#define v4l_ver(words) v4l2_##words
+
+#define v4l_ver_fmtdesc 		v4l_ver(fmtdesc) 
+#define v4l_ver_capability 		v4l_ver(capability)
+#define v4l_ver_std_id 			v4l_ver(std_id)
+#define v4l_ver_format 			v4l_ver(format)
+#define v4l_ver_requestbuffers 	v4l_ver(requestbuffers)
+#define v4l_ver_buffer 			v4l_ver(buffer)
+#define v4l_ver_buf_type 		v4l_ver(buf_type)
+
 typedef struct VideoBuffer{
 	void *start;
 	size_t length;
 }VideoBuffer;
 
+const int video_height = 240;
+const int video_width = 320;
+
+static struct v4l_ver_fmtdesc fmtdesc;
+static struct v4l_ver_capability capability;
+//static v4l_ver_std_id v4l2_std;
+static struct v4l_ver_format fmt;
+static struct v4l_ver_requestbuffers v4l2_reqbuf;
+static struct v4l_ver_buffer v4l2_buf;
+static enum v4l_ver_buf_type v4l2_type;
+
+static struct timeval tv;
+static int camerafd = -1;
+static fd_set fds;
+static VideoBuffer *buffers;
+static VideoBuffer current_buffer;
 SEND_BUFFER send_buffer;
 JPEG jpeg;
-static int camerafd = -1;
-static VideoBuffer current_buffer;
-int video_height = 240;
-int video_width = 320;
-static struct v4l2_fmtdesc fmtdesc;
-static struct v4l2_capability capability;
-//static v4l2_std_id v4l2_std;
-static struct v4l2_format fmt;
-static struct v4l2_requestbuffers v4l2_reqbuf;
-static VideoBuffer *buffers;
-static struct v4l2_buffer v4l2_buf;
-static enum v4l2_buf_type v4l2_type;
-static fd_set fds;
-static struct timeval tv;
 
 typedef struct {
 	struct jpeg_destination_mgr pub;

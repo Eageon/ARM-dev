@@ -13,18 +13,21 @@ COBJS	:= $(patsubst %.c, %.o, $(wildcard *.c))
 CPPOBJS	:= $(patsubst %.cpp, %.o, $(wildcard *.cpp))
 OBJS	:= $(AOBJS) $(COBJS) $(CPPOBJS)
 
+DEBUG 	:= g
+
 CROSS_COMPILE = arm-linux-
 #CROSS_COMPILE =
 CC	:= $(CROSS_COMPILE)gcc
+STDINC  := /usr/local/arm-linux-gnueabi/include
+EXTRAINC:= /usr/local/arm-linux-gnueabi/lib/gcc/arm-linux-gnueabi/4.6/include
 INCLUDE	:= $(PWD)/include
-CFLAGS	:= -Wall -O2 -g -I$(INCLUDE)
-LDFLAGS	:= -lpthread -ljpeg
+CFLAGS	:= -Wall -O2 -$(DEBUG) -nostdinc -I$(INCLUDE) -I$(STDINC) -I$(EXTRAINC) -march=armv5t
+LDFLAGS	:= -L/usr/local/arm-linux-gnueabi/lib -L/usr/local/arm-linux-gnueabi/lib/gcc/arm-linux-gnueabi/4.6 -lpthread -ljpeg
 
 export CC
 
 all: $(OBJS)
 	@for dir in $(SUBDIRS) ; \
-##		do $(MAKE) -C $$dir all; \
 		do $(MAKE) -C $$dir all; \
 	done
 
