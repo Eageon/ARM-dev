@@ -32,8 +32,9 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 
-#include <libv4l1-videodev.h>
-#include <libv4l2.h>
+//#include <libv4l1.h>
+#//include <libv4l1-videodev.h>
+#include <linux/videodev2.h>
 #include "../jpeg-8d/jpeglib.h"
 
 
